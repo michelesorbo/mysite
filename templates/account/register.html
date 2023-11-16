@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Registrazione Utente{% endblock title %}
+
+
+{% block content %}
+
+<form method="post">
+    {{ user_form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Crea Account"></p>
+<form>
+<p>Se sei già registrato vai a <a href="{% url "account:login" %}">LogIn</a></p>
+{% endblock content %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}Lista prodotti{% endblock title %}
+{% block content %}
+<div class="row">
+
+    {% comment %} <div class="col-lg-3">
+        <h1 class="h2 pb-4">Categories</h1>
+        <ul class="list-unstyled">
+            <li><a class="collapsed d-flex justify-content-between h3 text-decoration-none text-dark" href="{% url "shop:product_list" %}">All</a></li>
+            {% for cat in categories %}
+                {% if not cat.children_category.all %}
+                <li><a class="collapsed d-flex justify-content-between h3 text-decoration-none text-dark" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>    
+
+                {% else %}
+                <li class="pb-3">
+                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="{{ cat.get_absolute_url }}">
+                        {{ cat.name }}
+                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled pl-3">
+                        {% for sc in cat.children_category.all %}
+                        <li> -- <a class="text-decoration-none" href="{{ sc.get_absolute_url }}">{{ sc.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                {% endif %}
+            
+            {% endfor %}
+        </ul>
+    </div> {% endcomment %}
+
+    <div class="col-lg-3">
+        <h1 class="h2 pb-4">Categories</h1>
+
+        <ul class="list-unstyled ps-0">
+            <li><a href="{% url "shop:product_list" %}" class="link-dark rounded">All Products</a></li>
+            {% for cat in categories %}
+                {% if not cat.children_category.all %}
+                <li><a href="#" class="link-dark rounded">{{ cat.name }}</a></li>
+                {% else %}
+                <li class="mb-1">
+                    <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#cat-collapse{{cat.id}}" aria-expanded="true">
+                        {{ cat.name }}
+                    </button>
+
+                    <div class="collapse show" id="cat-collapse{{cat.id}}" style="">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="{{cat.get_absolute_url}}" class="link-dark rounded">Generale</a></li>
+                        {% for sc in cat.children_category.all %}
+                        {% if not sc.children_category.all %}
+                        <li><a href="{{sc.get_absolute_url}}" class="link-dark rounded">{{sc.name }}</a></li>
+                        {% else %}
+                        
+                        <li class="mb-1">
+                            <button class="btn btn-toggle align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#home-collapse{{sc.id}}" aria-expanded="true">
+                              {{sc.name}}
+                            </button>
+                            <div class="collapse show" id="home-collapse{{sc.id}}" style="">
+                              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                <li><a href="{{sc.get_absolute_url}}" class="link-dark rounded">Generale</a></li>
+                                {% for scc in sc.children_category.all %}
+                                <li><a href="{{scc.get_absolute_url}}" class="link-dark rounded">{{ scc.name }}</a></li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                          </li>
+
+                        {% endif %}
+                        
+                        {% endfor %}
+                      </ul>
+                    </div>
+
+                  </li>
+                {% endif %}
+            {% endfor %}
+
+            
+            
+          </ul>
+
+
+        {% comment %} <ul class="list-unstyled templatemo-accordion">
+            {% for cat in categories %}
+                {% if not cat.children_category.all %}
+                <li><a class="collapsed d-flex justify-content-between h3 text-decoration-none text-dark" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>    
+             
+                {% else %}
+                <li class="pb-3">
+                    <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="{{ cat.get_absolute_url }}">
+                        {{ cat.name }}
+                        <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+                    </a>
+                    <ul class="collapse show list-unstyled pl-3">
+                        {% for sc in cat.children_category.all %}
+                        <li> -- <a class="text-decoration-none" href="{{ sc.get_absolute_url }}">{{ sc.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul> {% endcomment %}
+    </div>
+
+    <div class="col-lg-9">
+        
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-inline shop-top-menu pb-3 pt-1">
+                    <li class="list-inline-item">
+                        {% if category %}
+                        <span class="h3 text-dark text-decoration-none mr-3">{{ category.name }}</span>
+                        {% else %}
+                        <span class="h3 text-dark text-decoration-none mr-3">Prodotti</span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+
+            {% for product in products  %}
+
+            <div class="col-md-4">
+                <div class="card mb-4 product-wap rounded-0">
+                    <div class="card rounded-0">
+                        <img class="card-img rounded-0 img-fluid" src="{{ product.img_resize.url }}">
+                        <div class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+                            <ul class="list-unstyled">
+                                <li><a class="btn btn-success text-white" href="shop-single.html"><i class="far fa-heart"></i></a></li>
+                                <li><a class="btn btn-success text-white mt-2" href="{{ product.get_absolute_url }}"><i class="far fa-eye"></i></a></li>
+                                <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i class="fas fa-cart-plus"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ product.get_absolute_url }}" class="h3 text-decoration-none">{{ product.name }}</a>
+                        <!--<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+                            <li>M/L/X/XL</li>
+                            <li class="pt-2">
+                                <span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+                                <span class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+                                <span class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+                                <span class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+                                <span class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+                            </li>
+                        </ul>-->
+                        <!--
+                        <ul class="list-unstyled d-flex justify-content-center mb-1">
+                            <li>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-warning fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                                <i class="text-muted fa fa-star"></i>
+                            </li>
+                        </ul>
+                        -->
+                        <p class="text-center mb-0">{{ product.price }}€</p>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+        {% include "shop/pagination.html" %}
+    </div>
+
+</div>
+{% endblock content %}
